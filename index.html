@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Private Quiz</title>
+  <style>
+    body { font-family: Arial; background: #f5f5f5; }
+    .quiz-container { width: 400px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0px 2px 10px #ccc;}
+    button { padding: 8px 20px; margin-top: 10px; border: none; background: #3b7ddd; color: #fff; border-radius: 4px; cursor: pointer;}
+    button:disabled { background: #aaa; }
+    #answers { margin: 20px 0; }
+    .answer-option { display: block; margin-bottom: 8px; }
+    #score { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="question"></div>
+    <div id="answers"></div>
+    <button id="next" onclick="nextQuestion()">Next</button>
+    <div id="score"></div>
+  </div>
+  <script>
+    const questions = [
+      {
+        question: "What is the capital of Rajasthan?",
+        options: ["Jaipur", "Delhi", "Jodhpur", "Kota"],
+        answer: 0
+      },
+      {
+        question: "Which is the largest planet?",
+        options: ["Earth", "Mars", "Jupiter", "Venus"],
+        answer: 2
+      }
+      // Add more questions here as needed!
+    ];
+    let current = 0, score = 0;
+    function loadQuestion() {
+      document.getElementById('question').textContent = questions[current].question;
+      const answersDiv = document.getElementById('answers');
+      answersDiv.innerHTML = '';
+      questions[current].options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.className = 'answer-option';
+        btn.onclick = () => selectAnswer(i);
+        answersDiv.appendChild(btn);
+      });
+      document.getElementById('next').disabled = true;
+      document.getElementById('score').textContent = "";
+    }
+    function selectAnswer(i) {
+      if (i === questions[current].answer) {
+        score++;
+        document.getElementById('score').textContent = "Correct!";
+      } else {
+        document.getElementById('score').textContent = "Wrong!";
+      }
+      Array.from(document.getElementsByClassName('answer-option')).forEach(btn => btn.disabled = true);
+      document.getElementById('next').disabled = false;
+    }
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) { loadQuestion(); }
+      else {
+        document.querySelector('.quiz-container').innerHTML = `<div>Your Score: <b>${score} / ${questions.length}</b></div>`;
+      }
+    }
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>
